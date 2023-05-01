@@ -43,3 +43,16 @@ export const deleteTodo = ({ token, id }) => {
 			return response.json();
 		})
 }
+
+export const login = ({ login, password }) => {
+	return fetch("https://webdev-hw-api.vercel.app/api/user/login", {
+		method: "POST",
+		body: JSON.stringify({
+			login,
+			password,
+		})
+	})
+		.then((response) => {
+			return response.json();
+		})
+}
