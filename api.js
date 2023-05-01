@@ -44,7 +44,7 @@ export const deleteTodo = ({ token, id }) => {
 		})
 }
 
-export const login = ({ login, password }) => {
+export const loginUser = ({ login, password }) => {
 	return fetch("https://webdev-hw-api.vercel.app/api/user/login", {
 		method: "POST",
 		body: JSON.stringify({
@@ -53,6 +53,9 @@ export const login = ({ login, password }) => {
 		})
 	})
 		.then((response) => {
+			if (response.status === 400) {
+				throw new Error("Entered not true login or password");
+			}
 			return response.json();
 		})
 }
