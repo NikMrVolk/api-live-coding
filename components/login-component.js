@@ -1,4 +1,4 @@
-import { loginUser } from "../api.js";
+import { loginUser, authorizationUser } from "../api.js";
 
 export const renderLoginComponent = ({ appEl, setToken, fetchTodosAndRender }) => {
 
@@ -27,30 +27,64 @@ export const renderLoginComponent = ({ appEl, setToken, fetchTodosAndRender }) =
 
 		document.getElementById("login-button")
 			.addEventListener("click", () => {
-				const login = document.getElementById("login-input");
-				const password = document.getElementById("password-input");
+				if (isLoadingForm) {
+					const login = document.getElementById("login-input");
+					const password = document.getElementById("password-input");
 
-				if (!login.value) {
-					alert("Enter login");
-					return;
-				}
-				if (!password.value) {
-					alert("Enter password");
-					return;
+					if (!login.value) {
+						alert("Enter login");
+						return;
+					}
+					if (!password.value) {
+						alert("Enter password");
+						return;
+					}
+
+					loginUser({
+						login: login.value,
+						password: password.value,
+					})
+						.then((user) => {
+							setToken(`Bearer ${user.user.token}`);
+							fetchTodosAndRender();
+						})
+						.catch((error) => {
+							alert("You entered not true login or password");
+							console.log(error);
+						})
+				} else {
+					const name = document.getElementById("name-input");
+					const login = document.getElementById("login-input");
+					const password = document.getElementById("password-input");
+
+					if (!name.value) {
+						alert("Enter name");
+						return;
+					}
+					if (!login.value) {
+						alert("Enter login");
+						return;
+					}
+					if (!password.value) {
+						alert("Enter password");
+						return;
+					}
+
+					authorizationUser({
+						name: name.value,
+						login: login.value,
+						password: password.value,
+					})
+						.then((user) => {
+							setToken(`Bearer ${user.user.token}`);
+							fetchTodosAndRender();
+						})
+						.catch((error) => {
+							alert("User with such data already exists");
+							console.log(error);
+						})
 				}
 
-				loginUser({
-					login: login.value,
-					password: password.value,
-				})
-					.then((user) => {
-						setToken(`Bearer ${user.user.token}`);
-						fetchTodosAndRender();
-					})
-					.catch((error) => {
-						alert("You entered not true login or password");
-						console.log(error);
-					})
 			})
 
 		document.getElementById("switching-button")
